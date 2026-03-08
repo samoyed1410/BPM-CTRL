@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        display: ['Outfit', 'sans-serif'],
+        body: ['Space Grotesk', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -47,6 +51,13 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        neon: {
+          pink: "hsl(var(--neon-pink))",
+          cyan: "hsl(var(--neon-cyan))",
+          lime: "hsl(var(--neon-lime))",
+          purple: "hsl(var(--neon-purple))",
+          orange: "hsl(var(--neon-orange))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -65,25 +76,35 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        "blob-morph": {
+          "0%, 100%": { borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%" },
+          "25%": { borderRadius: "30% 60% 70% 40% / 50% 60% 30% 60%" },
+          "50%": { borderRadius: "50% 60% 30% 60% / 40% 70% 50% 60%" },
+          "75%": { borderRadius: "60% 30% 50% 40% / 70% 40% 60% 30%" },
+        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
+          "33%": { transform: "translateY(-15px) rotate(2deg)" },
+          "66%": { transform: "translateY(10px) rotate(-1deg)" },
+        },
+        "pulse-glow": {
+          "0%, 100%": { opacity: "0.6", transform: "scale(1)" },
+          "50%": { opacity: "1", transform: "scale(1.05)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "blob-morph": "blob-morph 8s ease-in-out infinite",
+        "float": "float 6s ease-in-out infinite",
+        "pulse-glow": "pulse-glow 3s ease-in-out infinite",
       },
     },
   },
