@@ -59,6 +59,42 @@ export type Database = {
         }
         Relationships: []
       }
+      site_content: {
+        Row: {
+          content_key: string
+          content_type: string
+          content_value: string
+          created_at: string
+          id: string
+          is_active: boolean
+          section: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          content_key: string
+          content_type?: string
+          content_value?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          section: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          content_key?: string
+          content_type?: string
+          content_value?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          section?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
