@@ -24,6 +24,7 @@ const Index = () => {
         </a>
         <Navbar />
         <main id="main-content">
+        <HeroSection />
         <EventSection />
         <BroadcastSection />
         <StyleIndexSection />
