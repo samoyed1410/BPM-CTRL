@@ -8,14 +8,12 @@ export default {
     container: {
       center: true,
       padding: "2rem",
-      screens: {
-        "2xl": "1400px",
-      },
+      screens: { "2xl": "1400px" },
     },
     extend: {
       fontFamily: {
-        display: ['Outfit', 'sans-serif'],
-        body: ['Space Grotesk', 'sans-serif'],
+        display: ["Orbitron", "sans-serif"],
+        body: ["Space Grotesk", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -51,12 +49,12 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        neon: {
-          pink: "hsl(var(--neon-pink))",
-          cyan: "hsl(var(--neon-cyan))",
-          lime: "hsl(var(--neon-lime))",
-          purple: "hsl(var(--neon-purple))",
-          orange: "hsl(var(--neon-orange))",
+        orange: {
+          deep: "hsl(var(--orange-deep))",
+          rust: "hsl(var(--orange-rust))",
+          rave: "hsl(var(--orange-rave))",
+          neon: "hsl(var(--orange-neon))",
+          amber: "hsl(var(--orange-amber))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -83,28 +81,42 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "blob-morph": {
-          "0%, 100%": { borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%" },
-          "25%": { borderRadius: "30% 60% 70% 40% / 50% 60% 30% 60%" },
-          "50%": { borderRadius: "50% 60% 30% 60% / 40% 70% 50% 60%" },
-          "75%": { borderRadius: "60% 30% 50% 40% / 70% 40% 60% 30%" },
-        },
-        "float": {
-          "0%, 100%": { transform: "translateY(0) rotate(0deg)" },
-          "33%": { transform: "translateY(-15px) rotate(2deg)" },
-          "66%": { transform: "translateY(10px) rotate(-1deg)" },
+        glitch: {
+          "0%, 100%": { transform: "translate(0)" },
+          "20%": { transform: "translate(-2px, 1px)" },
+          "40%": { transform: "translate(2px, -1px)" },
+          "60%": { transform: "translate(-1px, -1px)" },
+          "80%": { transform: "translate(1px, 2px)" },
         },
         "pulse-glow": {
-          "0%, 100%": { opacity: "0.6", transform: "scale(1)" },
-          "50%": { opacity: "1", transform: "scale(1.05)" },
+          "0%, 100%": { opacity: "0.5" },
+          "50%": { opacity: "1" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        "signal-pulse": {
+          "0%, 100%": { transform: "scale(1)", opacity: "0.6" },
+          "50%": { transform: "scale(1.02)", opacity: "1" },
+        },
+        flicker: {
+          "0%, 100%": { opacity: "1" },
+          "92%": { opacity: "1" },
+          "93%": { opacity: "0.3" },
+          "94%": { opacity: "1" },
+          "96%": { opacity: "0.7" },
+          "97%": { opacity: "1" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "blob-morph": "blob-morph 8s ease-in-out infinite",
-        "float": "float 6s ease-in-out infinite",
+        glitch: "glitch 0.3s ease-in-out",
         "pulse-glow": "pulse-glow 3s ease-in-out infinite",
+        float: "float 4s ease-in-out infinite",
+        "signal-pulse": "signal-pulse 2s ease-in-out infinite",
+        flicker: "flicker 4s ease-in-out infinite",
       },
     },
   },
