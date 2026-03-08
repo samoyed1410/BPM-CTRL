@@ -32,18 +32,19 @@ const CommunitySection = () => {
             <h2 className="font-display text-2xl md:text-4xl font-black text-foreground mb-8 text-glow-orange leading-tight">
               We don't just throw raves.
               <br />
-              <span className="gradient-text-orange">We build frequency.</span>
+              <span className="gradient-text-orange">We build culture.</span>
             </h2>
 
             <div className="space-y-6 text-orange-amber/60 font-body text-base md:text-lg leading-relaxed">
               <p>
-                BPM CTRL is more than sound. It's a movement — an underground signal
-                connecting those who seek rhythm as release, dance as expression,
-                and community as home.
+                BPM CTRL is a Nigerian-born movement rooted in Afro house, underground 
+                dance energy, and fashion expression. We transmit a signal that connects 
+                those who move to the same frequency.
               </p>
               <p>
-                We build spaces where every body belongs. Where the bass hits different
-                because you're surrounded by people who feel it the same way you do.
+                Dance is spiritual release. Fashion is personal expression. 
+                Together they form the language of our community — a space where 
+                every body belongs and the bass hits different.
               </p>
               <p>
                 No hierarchy. No ego. Just pulse.
@@ -52,10 +53,10 @@ const CommunitySection = () => {
 
             <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { emoji: "🔊", text: "Rhythm as Release" },
-                { emoji: "🌀", text: "Dance as Expression" },
-                { emoji: "🤝", text: "Inclusive Community" },
-                { emoji: "⚡", text: "Connected by Pulse" },
+                { emoji: "🔊", text: "Afro House Culture" },
+                { emoji: "💃", text: "Dance as Language" },
+                { emoji: "👗", text: "Fashion Expression" },
+                { emoji: "⚡", text: "Inclusive Community" },
               ].map((item) => (
                 <div key={item.text} className="text-center py-4 px-2 rounded-lg bg-muted/30 border border-border">
                   <span className="text-2xl block mb-2">{item.emoji}</span>

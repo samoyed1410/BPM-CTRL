@@ -1,6 +1,8 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import EventSection from "@/components/EventSection";
+import BroadcastSection from "@/components/BroadcastSection";
+import StyleIndexSection from "@/components/StyleIndexSection";
 import ArchiveSection from "@/components/ArchiveSection";
 import CommunitySection from "@/components/CommunitySection";
 import GamificationSection from "@/components/GamificationSection";
@@ -11,6 +13,8 @@ const Index = () => {
       <Navbar />
       <HeroSection />
       <EventSection />
+      <BroadcastSection />
+      <StyleIndexSection />
       <ArchiveSection />
       <CommunitySection />
       <GamificationSection />
@@ -24,7 +28,7 @@ const Index = () => {
             </span>
           </div>
           <p className="text-xs font-body text-muted-foreground">
-            Control the Rhythm. Join the Signal.
+            Dance is the language. Fashion is the expression.
           </p>
         </div>
       </footer>

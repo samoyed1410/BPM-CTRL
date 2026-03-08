@@ -8,6 +8,7 @@ const LEVELS = [
   { name: "Frequency Walker", icon: Zap, xpNeeded: 100, color: "text-orange-rave" },
   { name: "Pulse Rider", icon: Shield, xpNeeded: 300, color: "text-orange-neon" },
   { name: "Rhythm Controller", icon: Crown, xpNeeded: 600, color: "text-primary" },
+  { name: "Bass Architect", icon: Zap, xpNeeded: 1000, color: "text-orange-neon" },
 ];
 
 // Next rave countdown target
@@ -84,7 +85,7 @@ const GamificationSection = () => {
           transition={{ delay: 0.1 }}
           className="text-center font-display text-4xl md:text-6xl font-black gradient-text-orange mb-16"
         >
-          JOIN THE BPM SIGNAL
+          JOIN THE SIGNAL NETWORK
         </motion.h2>
 
         {/* Alias Input */}
