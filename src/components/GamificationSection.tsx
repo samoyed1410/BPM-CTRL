@@ -8,6 +8,7 @@ const LEVELS = [
   { name: "Frequency Walker", icon: Zap, xpNeeded: 100, color: "text-orange-rave" },
   { name: "Pulse Rider", icon: Shield, xpNeeded: 300, color: "text-orange-neon" },
   { name: "Rhythm Controller", icon: Crown, xpNeeded: 600, color: "text-primary" },
+  { name: "Bass Architect", icon: Zap, xpNeeded: 1000, color: "text-orange-neon" },
 ];
 
 // Next rave countdown target
