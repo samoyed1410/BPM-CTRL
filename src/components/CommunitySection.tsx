@@ -1,5 +1,9 @@
 import { motion } from "framer-motion";
 import { Radio } from "lucide-react";
+import iconSpeaker from "@/assets/icon-speaker.png";
+import iconDancer from "@/assets/icon-dancer.png";
+import iconFashion from "@/assets/icon-fashion.png";
+import iconCommunity from "@/assets/icon-community.png";
 
 const CommunitySection = () => {
   return (
@@ -53,13 +57,13 @@ const CommunitySection = () => {
 
             <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { emoji: "🔊", text: "Afro House Culture" },
-                { emoji: "💃", text: "Dance as Language" },
-                { emoji: "👗", text: "Fashion Expression" },
-                { emoji: "⚡", text: "Inclusive Community" },
+                { img: iconSpeaker, text: "Afro House Culture" },
+                { img: iconDancer, text: "Dance as Language" },
+                { img: iconFashion, text: "Fashion Expression" },
+                { img: iconCommunity, text: "Inclusive Community" },
               ].map((item) => (
                 <div key={item.text} className="text-center py-4 px-2 rounded-lg bg-muted/30 border border-border">
-                  <span className="text-2xl block mb-2">{item.emoji}</span>
+                  <img src={item.img} alt={item.text} className="w-10 h-10 mx-auto mb-2 object-contain" />
                   <span className="text-xs font-display tracking-wider text-muted-foreground uppercase">{item.text}</span>
                 </div>
               ))}
