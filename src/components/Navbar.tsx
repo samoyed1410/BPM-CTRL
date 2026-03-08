@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Menu, X } from "lucide-react";
+import { Zap, Menu, X, Instagram, Twitter, Music } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "#event", label: "Event" },
