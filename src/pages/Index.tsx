@@ -19,8 +19,11 @@ const Index = () => {
     <>
       {!splashDone && <SplashScreen onComplete={handleSplashComplete} />}
       <div className="min-h-screen bg-background">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:px-4 focus:py-2 focus:rounded focus:bg-primary focus:text-primary-foreground focus:font-display focus:text-sm focus:tracking-wider focus:outline-none">
+          Skip to content
+        </a>
         <Navbar />
-        <HeroSection />
+        <main id="main-content">
         <EventSection />
         <BroadcastSection />
         <StyleIndexSection />
