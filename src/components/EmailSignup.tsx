@@ -3,11 +3,17 @@ import { motion } from "framer-motion";
 import { Radio, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useSectionContent, getContentValue } from "@/hooks/useSiteContent";
 
 const EmailSignup = () => {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const { toast } = useToast();
+  const { data: content } = useSectionContent("email");
+
+  const title = getContentValue(content, "email_title", "STAY ON THE FREQUENCY");
+  const description = getContentValue(content, "email_description", "Get early event access, secret drops, and community updates. No spam — only signal.");
+  const cta = getContentValue(content, "email_cta", "Join Signal");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,7 +22,6 @@ const EmailSignup = () => {
       toast({ title: "Invalid email", description: "Please enter a valid email address.", variant: "destructive" });
       return;
     }
-    // Store locally until a backend service is connected
     const existing = JSON.parse(localStorage.getItem("bpmctrl_signups") || "[]");
     existing.push({ email: trimmed, timestamp: new Date().toISOString() });
     localStorage.setItem("bpmctrl_signups", JSON.stringify(existing));
@@ -38,10 +43,10 @@ const EmailSignup = () => {
           <div className="relative z-10">
             <Radio className="w-6 h-6 text-primary mx-auto mb-4 animate-pulse-glow" />
             <h3 className="font-display text-2xl md:text-3xl font-black text-foreground text-glow-orange mb-2">
-              STAY ON THE FREQUENCY
+              {title}
             </h3>
             <p className="text-muted-foreground font-body text-sm mb-8 max-w-md mx-auto">
-              Get early event access, secret drops, and community updates. No spam — only signal.
+              {description}
             </p>
 
             {!submitted ? (
@@ -55,7 +60,7 @@ const EmailSignup = () => {
                   className="flex-1 bg-muted border border-border rounded-lg px-4 py-3 text-foreground font-body placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-all"
                 />
                 <Button variant="neon" size="lg" type="submit">
-                  Join Signal
+                  {cta}
                 </Button>
               </form>
             ) : (

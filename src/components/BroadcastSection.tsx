@@ -1,38 +1,24 @@
 import { motion } from "framer-motion";
 import { Play, Mic, Users, Radio } from "lucide-react";
+import { useSectionContent, getContentValue, getContentJSON } from "@/hooks/useSiteContent";
 
-const broadcastItems = [
-  {
-    type: "DJ Set",
-    title: "AFRO FREQUENCY — Live Set",
-    description: "Full DJ set from the last underground transmission.",
-    icon: Play,
-    tag: "VIDEO",
-  },
-  {
-    type: "Crowd Moment",
-    title: "THE FLOOR SPEAKS",
-    description: "Raw crowd energy captured in motion.",
-    icon: Users,
-    tag: "MOMENT",
-  },
-  {
-    type: "Dance Clip",
-    title: "BODY SIGNAL 003",
-    description: "Movement is the message. Watch the language.",
-    icon: Radio,
-    tag: "DANCE",
-  },
-  {
-    type: "Interview",
-    title: "SIGNAL CARRIER — DJ ÌFÉ",
-    description: "In conversation with the sound architect.",
-    icon: Mic,
-    tag: "INTERVIEW",
-  },
+const iconMap: Record<string, React.ElementType> = { Play, Mic, Users, Radio };
+
+const defaultItems = [
+  { type: "DJ Set", title: "AFRO FREQUENCY — Live Set", description: "Full DJ set from the last underground transmission.", icon: "Play", tag: "VIDEO" },
+  { type: "Crowd Moment", title: "THE FLOOR SPEAKS", description: "Raw crowd energy captured in motion.", icon: "Users", tag: "MOMENT" },
+  { type: "Dance Clip", title: "BODY SIGNAL 003", description: "Movement is the message. Watch the language.", icon: "Radio", tag: "DANCE" },
+  { type: "Interview", title: "SIGNAL CARRIER — DJ ÌFÉ", description: "In conversation with the sound architect.", icon: "Mic", tag: "INTERVIEW" },
 ];
 
 const BroadcastSection = () => {
+  const { data: content } = useSectionContent("broadcast");
+
+  const tagline = getContentValue(content, "broadcast_tagline", "Live Transmissions");
+  const title = getContentValue(content, "broadcast_title", "BPM CTRL BROADCAST");
+  const description = getContentValue(content, "broadcast_description", "DJ sets, crowd moments, dance clips, and artist interviews — the signal never stops.");
+  const items = getContentJSON(content, "broadcast_items", defaultItems);
+
   return (
     <section id="broadcast" className="py-24 px-4 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-orange-deep/5 to-background" />
@@ -44,7 +30,7 @@ const BroadcastSection = () => {
           viewport={{ once: true }}
           className="text-center mb-4"
         >
-          <span className="text-xs font-display tracking-[0.4em] text-primary uppercase">Live Transmissions</span>
+          <span className="text-xs font-display tracking-[0.4em] text-primary uppercase">{tagline}</span>
         </motion.div>
 
         <motion.h2
@@ -54,7 +40,7 @@ const BroadcastSection = () => {
           transition={{ delay: 0.1 }}
           className="text-center font-display text-4xl md:text-6xl font-black gradient-text-orange mb-6"
         >
-          BPM CTRL BROADCAST
+          {title}
         </motion.h2>
 
         <motion.p
@@ -64,12 +50,12 @@ const BroadcastSection = () => {
           transition={{ delay: 0.2 }}
           className="text-center text-muted-foreground font-body max-w-xl mx-auto mb-16"
         >
-          DJ sets, crowd moments, dance clips, and artist interviews — the signal never stops.
+          {description}
         </motion.p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {broadcastItems.map((item, i) => {
-            const Icon = item.icon;
+          {items.map((item: any, i: number) => {
+            const Icon = iconMap[item.icon] || Play;
             return (
               <motion.div
                 key={item.title}

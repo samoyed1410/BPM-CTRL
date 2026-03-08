@@ -1,19 +1,25 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import FrequencyWaves from "@/components/FrequencyWaves";
+import { useSectionContent, getContentValue } from "@/hooks/useSiteContent";
 
 const HeroSection = () => {
+  const { data: content } = useSectionContent("hero");
+
+  const tagline = getContentValue(content, "hero_tagline", "Transmitting Signal");
+  const title = getContentValue(content, "hero_title", "BPM CTRL");
+  const subtitle1 = getContentValue(content, "hero_subtitle_1", "Dance is the language.");
+  const subtitle2 = getContentValue(content, "hero_subtitle_2", "Fashion is the expression.");
+  const ctaPrimary = getContentValue(content, "hero_cta_primary", "Enter the Signal");
+  const ctaSecondary = getContentValue(content, "hero_cta_secondary", "Access Tickets");
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background layers */}
       <div className="absolute inset-0 bg-gradient-to-b from-orange-deep/20 via-background to-background" />
       <FrequencyWaves />
       <div className="absolute inset-0 scanline pointer-events-none" />
-
-      {/* Radial glow behind title */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/8 rounded-full blur-[120px] animate-pulse-glow" />
 
-      {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -22,7 +28,7 @@ const HeroSection = () => {
           className="mb-4"
         >
           <span className="inline-block px-4 py-1.5 rounded-full border border-primary/30 text-primary text-xs font-display tracking-[0.4em] uppercase glow-border-orange">
-            Transmitting Signal
+            {tagline}
           </span>
         </motion.div>
 
@@ -32,7 +38,7 @@ const HeroSection = () => {
           transition={{ duration: 1, delay: 0.4 }}
           className="font-display text-7xl sm:text-8xl md:text-9xl font-black tracking-tight mb-6 text-glow-orange gradient-text-orange animate-flicker"
         >
-          BPM CTRL
+          {title}
         </motion.h1>
 
         <motion.p
@@ -41,7 +47,7 @@ const HeroSection = () => {
           transition={{ duration: 1, delay: 0.8 }}
           className="text-orange-amber/70 text-lg md:text-xl font-body max-w-xl mx-auto mb-4 tracking-wide"
         >
-          Dance is the language.
+          {subtitle1}
         </motion.p>
         <motion.p
           initial={{ opacity: 0 }}
@@ -49,7 +55,7 @@ const HeroSection = () => {
           transition={{ duration: 1, delay: 1 }}
           className="text-orange-amber/50 text-lg md:text-xl font-body max-w-xl mx-auto mb-12 tracking-wide"
         >
-          Fashion is the expression.
+          {subtitle2}
         </motion.p>
 
         <motion.div
@@ -60,17 +66,16 @@ const HeroSection = () => {
         >
           <a href="#signal">
             <Button variant="neon" size="xl">
-              Enter the Signal
+              {ctaPrimary}
             </Button>
           </a>
           <a href="#event">
             <Button variant="portal" size="xl">
-              Access Tickets
+              {ctaSecondary}
             </Button>
           </a>
         </motion.div>
 
-        {/* Signal indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -84,7 +89,6 @@ const HeroSection = () => {
         </motion.div>
       </div>
 
-      {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
     </section>
   );
