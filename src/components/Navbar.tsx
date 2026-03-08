@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Menu, X } from "lucide-react";
+import { Zap, Menu, X, Instagram, Twitter, Music } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "#event", label: "Event" },
@@ -39,12 +39,25 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <a href="#signal" className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-primary/30 text-primary text-xs font-display tracking-wider hover:bg-primary/10 transition-colors">
-            <Zap className="w-3 h-3" />
-            Join
-          </a>
+          {/* Social icons */}
+          <div className="hidden sm:flex items-center gap-2">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors p-1.5" aria-label="Instagram">
+              <Instagram className="w-4 h-4" />
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors p-1.5" aria-label="Twitter">
+              <Twitter className="w-4 h-4" />
+            </a>
+            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors p-1.5" aria-label="TikTok">
+              <Music className="w-4 h-4" />
+            </a>
+          </div>
 
-          {/* Mobile hamburger */}
+           <a href="#signal" className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-primary/30 text-primary text-xs font-display tracking-wider hover:bg-primary/10 transition-colors">
+             <Zap className="w-3 h-3" />
+             Join
+           </a>
+
+           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="md:hidden p-1.5 text-muted-foreground hover:text-primary transition-colors"
