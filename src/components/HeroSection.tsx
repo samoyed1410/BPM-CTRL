@@ -39,9 +39,17 @@ const HeroSection = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="text-orange-amber/70 text-lg md:text-xl font-body max-w-xl mx-auto mb-12 tracking-wide"
+          className="text-orange-amber/70 text-lg md:text-xl font-body max-w-xl mx-auto mb-4 tracking-wide"
         >
-          Control the Rhythm. Join the Signal.
+          Dance is the language.
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1 }}
+          className="text-orange-amber/50 text-lg md:text-xl font-body max-w-xl mx-auto mb-12 tracking-wide"
+        >
+          Fashion is the expression.
         </motion.p>
 
         <motion.div
