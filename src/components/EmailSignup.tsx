@@ -16,7 +16,10 @@ const EmailSignup = () => {
       toast({ title: "Invalid email", description: "Please enter a valid email address.", variant: "destructive" });
       return;
     }
-    // In production, this would POST to a backend/newsletter API
+    // Store locally until a backend service is connected
+    const existing = JSON.parse(localStorage.getItem("bpmctrl_signups") || "[]");
+    existing.push({ email: trimmed, timestamp: new Date().toISOString() });
+    localStorage.setItem("bpmctrl_signups", JSON.stringify(existing));
     setSubmitted(true);
     toast({ title: "Signal received", description: "You're now on the BPM CTRL frequency." });
   };
