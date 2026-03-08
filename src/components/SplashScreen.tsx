@@ -19,9 +19,12 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
         animate={phase === "exit" ? { opacity: 0 } : { opacity: 1 }}
         transition={{ duration: 0.6 }}
         className="fixed inset-0 z-[100] bg-background flex flex-col items-center justify-center"
+        role="status"
+        aria-live="polite"
+        aria-label="Loading BPM CTRL"
       >
         {/* Radial glow */}
-        <div className="absolute w-[400px] h-[400px] bg-primary/10 rounded-full blur-[120px] animate-pulse-glow" />
+        <div className="absolute w-[400px] h-[400px] bg-primary/10 rounded-full blur-[120px] animate-pulse-glow" aria-hidden="true" />
 
         {/* Logo */}
         <motion.div
@@ -30,7 +33,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
           transition={{ duration: 0.8, ease: "easeOut" }}
           className="relative z-10 text-center"
         >
-          <div className="w-3 h-3 rounded-full bg-primary mx-auto mb-6 animate-pulse-glow" />
+          <div className="w-3 h-3 rounded-full bg-primary mx-auto mb-6 animate-pulse-glow" aria-hidden="true" />
           <h1 className="font-display text-5xl md:text-7xl font-black gradient-text-orange text-glow-orange tracking-tight">
             BPM CTRL
           </h1>
@@ -51,6 +54,8 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
           transition={{ duration: 1.6, ease: "easeInOut", delay: 0.3 }}
           className="h-0.5 rounded-full gradient-bg-orange mt-8 relative z-10"
           style={{ boxShadow: "0 0 15px hsl(22 100% 55% / 0.5)" }}
+          role="progressbar"
+          aria-label="Loading progress"
         />
       </motion.div>
     </AnimatePresence>

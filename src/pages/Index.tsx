@@ -19,7 +19,11 @@ const Index = () => {
     <>
       {!splashDone && <SplashScreen onComplete={handleSplashComplete} />}
       <div className="min-h-screen bg-background">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[200] focus:px-4 focus:py-2 focus:rounded focus:bg-primary focus:text-primary-foreground focus:font-display focus:text-sm focus:tracking-wider focus:outline-none">
+          Skip to content
+        </a>
         <Navbar />
+        <main id="main-content">
         <HeroSection />
         <EventSection />
         <BroadcastSection />
@@ -28,8 +32,9 @@ const Index = () => {
         <CommunitySection />
         <EmailSignup />
         <GamificationSection />
+        </main>
 
-        <footer className="py-10 px-4 border-t border-border">
+        <footer className="py-10 px-4 border-t border-border" role="contentinfo">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-glow" />
