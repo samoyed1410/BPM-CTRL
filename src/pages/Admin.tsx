@@ -121,153 +121,168 @@ const Admin = () => {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="font-display text-3xl font-black gradient-text-orange">ASSET CONTROL</h1>
-            <p className="text-muted-foreground text-sm font-body mt-1">Manage photos and assets across the site</p>
-          </div>
-          <Button variant="neon" onClick={() => { resetForm(); setShowForm(true); }}>
-            <Plus className="w-4 h-4 mr-2" /> Add Asset
-          </Button>
-        </div>
-
-        {/* Upload Form */}
-        {showForm && (
-          <div className="glow-border-orange rounded-2xl bg-card p-6 mb-8 relative">
-            <div className="scanline absolute inset-0 pointer-events-none opacity-10 rounded-2xl" />
-            <div className="relative z-10">
-              <h3 className="font-display text-lg font-bold text-foreground mb-4">
-                {editId ? "Edit Asset" : "Upload New Asset"}
-              </h3>
-              <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Label className="font-display text-xs tracking-wider text-muted-foreground uppercase">Name</Label>
-                  <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="mt-1 bg-muted border-border" required />
-                </div>
-                <div>
-                  <Label className="font-display text-xs tracking-wider text-muted-foreground uppercase">Section</Label>
-                  <select
-                    value={form.section}
-                    onChange={(e) => setForm({ ...form, section: e.target.value })}
-                    className="mt-1 w-full bg-muted border border-border rounded-md px-3 py-2 text-foreground text-sm"
-                  >
-                    {SECTIONS.map((s) => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <Label className="font-display text-xs tracking-wider text-muted-foreground uppercase">Type</Label>
-                  <select
-                    value={form.asset_type}
-                    onChange={(e) => setForm({ ...form, asset_type: e.target.value })}
-                    className="mt-1 w-full bg-muted border border-border rounded-md px-3 py-2 text-foreground text-sm"
-                  >
-                    <option value="image">Image</option>
-                    <option value="icon">Icon</option>
-                    <option value="illustration">Illustration</option>
-                  </select>
-                </div>
-                <div>
-                  <Label className="font-display text-xs tracking-wider text-muted-foreground uppercase">Sort Order</Label>
-                  <Input type="number" value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} className="mt-1 bg-muted border-border" />
-                </div>
-                <div className="md:col-span-2">
-                  <Label className="font-display text-xs tracking-wider text-muted-foreground uppercase">Description</Label>
-                  <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="mt-1 bg-muted border-border" />
-                </div>
-                <div className="md:col-span-2">
-                  <Label className="font-display text-xs tracking-wider text-muted-foreground uppercase">
-                    {editId ? "Replace File (optional)" : "File"}
-                  </Label>
-                  <div className="mt-1 flex items-center gap-3">
-                    <label className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-muted hover:bg-muted/80 cursor-pointer transition-colors">
-                      <Upload className="w-4 h-4 text-primary" />
-                      <span className="text-sm font-body text-foreground">{file ? file.name : "Choose file"}</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={(e) => setFile(e.target.files?.[0] || null)} />
-                    </label>
-                  </div>
-                </div>
-                <div className="md:col-span-2 flex gap-3">
-                  <Button variant="neon" type="submit" disabled={uploading}>
-                    {uploading ? "Uploading..." : editId ? "Update" : "Upload"}
-                  </Button>
-                  <Button variant="portal" type="button" onClick={resetForm}>Cancel</Button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* Assets by section */}
-        <Tabs defaultValue="all">
-          <TabsList className="bg-muted mb-6">
-            <TabsTrigger value="all" className="font-display text-xs tracking-wider">All</TabsTrigger>
-            {SECTIONS.map((s) => (
-              <TabsTrigger key={s} value={s} className="font-display text-xs tracking-wider">
-                {s.charAt(0).toUpperCase() + s.slice(1)}
-              </TabsTrigger>
-            ))}
+        <Tabs defaultValue="content" className="w-full">
+          <TabsList className="bg-muted mb-8">
+            <TabsTrigger value="content" className="font-display text-xs tracking-wider gap-2">
+              <FileText className="w-3.5 h-3.5" /> Content
+            </TabsTrigger>
+            <TabsTrigger value="assets" className="font-display text-xs tracking-wider gap-2">
+              <ImageIcon className="w-3.5 h-3.5" /> Assets
+            </TabsTrigger>
           </TabsList>
 
-          {["all", ...SECTIONS].map((tab) => (
-            <TabsContent key={tab} value={tab}>
-              <div className="glow-border-orange rounded-2xl bg-card overflow-hidden relative">
-                <div className="scanline absolute inset-0 pointer-events-none opacity-5 rounded-2xl" />
-                <Table>
-                  <TableHeader>
-                    <TableRow className="border-border">
-                      <TableHead className="font-display text-xs tracking-wider text-muted-foreground">Preview</TableHead>
-                      <TableHead className="font-display text-xs tracking-wider text-muted-foreground">Name</TableHead>
-                      <TableHead className="font-display text-xs tracking-wider text-muted-foreground">Section</TableHead>
-                      <TableHead className="font-display text-xs tracking-wider text-muted-foreground">Type</TableHead>
-                      <TableHead className="font-display text-xs tracking-wider text-muted-foreground">Status</TableHead>
-                      <TableHead className="font-display text-xs tracking-wider text-muted-foreground text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {(assets || [])
-                      .filter((a) => tab === "all" || a.section === tab)
-                      .map((asset) => (
-                        <TableRow key={asset.id} className="border-border">
-                          <TableCell>
-                            <img src={asset.public_url} alt={asset.name} className="w-12 h-12 rounded-lg object-cover bg-muted" />
-                          </TableCell>
-                          <TableCell className="font-body text-sm text-foreground">{asset.name}</TableCell>
-                          <TableCell>
-                            <span className="px-2 py-1 rounded-full border border-primary/30 text-[10px] font-display tracking-wider text-primary uppercase">
-                              {asset.section}
-                            </span>
-                          </TableCell>
-                          <TableCell className="text-xs font-body text-muted-foreground">{asset.asset_type}</TableCell>
-                          <TableCell>
-                            <span className={`w-2 h-2 rounded-full inline-block ${asset.is_active ? "bg-primary" : "bg-muted-foreground"}`} />
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex items-center justify-end gap-1">
-                              <Button variant="ghost" size="icon" onClick={() => toggleActive(asset)} title={asset.is_active ? "Hide" : "Show"}>
-                                {asset.is_active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                              </Button>
-                              <Button variant="ghost" size="icon" onClick={() => startEdit(asset)}>
-                                <Edit className="w-4 h-4" />
-                              </Button>
-                              <Button variant="ghost" size="icon" onClick={() => handleDelete(asset.id)} className="text-destructive hover:text-destructive">
-                                <Trash2 className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    {(assets || []).filter((a) => tab === "all" || a.section === tab).length === 0 && (
-                      <TableRow>
-                        <TableCell colSpan={6} className="text-center text-muted-foreground py-8 font-body">
-                          No assets in this section yet
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
+          <TabsContent value="content">
+            <ContentManager />
+          </TabsContent>
+
+          <TabsContent value="assets">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="font-display text-2xl font-black gradient-text-orange">ASSET CONTROL</h2>
+                <p className="text-muted-foreground text-sm font-body mt-1">Manage photos and assets across the site</p>
               </div>
-            </TabsContent>
-          ))}
+              <Button variant="neon" onClick={() => { resetForm(); setShowForm(true); }}>
+                <Plus className="w-4 h-4 mr-2" /> Add Asset
+              </Button>
+            </div>
+
+            {showForm && (
+              <div className="glow-border-orange rounded-2xl bg-card p-6 mb-8 relative">
+                <div className="scanline absolute inset-0 pointer-events-none opacity-10 rounded-2xl" />
+                <div className="relative z-10">
+                  <h3 className="font-display text-lg font-bold text-foreground mb-4">
+                    {editId ? "Edit Asset" : "Upload New Asset"}
+                  </h3>
+                  <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label className="font-display text-xs tracking-wider text-muted-foreground uppercase">Name</Label>
+                      <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="mt-1 bg-muted border-border" required />
+                    </div>
+                    <div>
+                      <Label className="font-display text-xs tracking-wider text-muted-foreground uppercase">Section</Label>
+                      <select
+                        value={form.section}
+                        onChange={(e) => setForm({ ...form, section: e.target.value })}
+                        className="mt-1 w-full bg-muted border border-border rounded-md px-3 py-2 text-foreground text-sm"
+                      >
+                        {SECTIONS.map((s) => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="font-display text-xs tracking-wider text-muted-foreground uppercase">Type</Label>
+                      <select
+                        value={form.asset_type}
+                        onChange={(e) => setForm({ ...form, asset_type: e.target.value })}
+                        className="mt-1 w-full bg-muted border border-border rounded-md px-3 py-2 text-foreground text-sm"
+                      >
+                        <option value="image">Image</option>
+                        <option value="icon">Icon</option>
+                        <option value="illustration">Illustration</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label className="font-display text-xs tracking-wider text-muted-foreground uppercase">Sort Order</Label>
+                      <Input type="number" value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: parseInt(e.target.value) || 0 })} className="mt-1 bg-muted border-border" />
+                    </div>
+                    <div className="md:col-span-2">
+                      <Label className="font-display text-xs tracking-wider text-muted-foreground uppercase">Description</Label>
+                      <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="mt-1 bg-muted border-border" />
+                    </div>
+                    <div className="md:col-span-2">
+                      <Label className="font-display text-xs tracking-wider text-muted-foreground uppercase">
+                        {editId ? "Replace File (optional)" : "File"}
+                      </Label>
+                      <div className="mt-1 flex items-center gap-3">
+                        <label className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border bg-muted hover:bg-muted/80 cursor-pointer transition-colors">
+                          <Upload className="w-4 h-4 text-primary" />
+                          <span className="text-sm font-body text-foreground">{file ? file.name : "Choose file"}</span>
+                          <input type="file" accept="image/*" className="hidden" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+                        </label>
+                      </div>
+                    </div>
+                    <div className="md:col-span-2 flex gap-3">
+                      <Button variant="neon" type="submit" disabled={uploading}>
+                        {uploading ? "Uploading..." : editId ? "Update" : "Upload"}
+                      </Button>
+                      <Button variant="portal" type="button" onClick={resetForm}>Cancel</Button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+
+            <Tabs defaultValue="all">
+              <TabsList className="bg-muted mb-6">
+                <TabsTrigger value="all" className="font-display text-xs tracking-wider">All</TabsTrigger>
+                {SECTIONS.map((s) => (
+                  <TabsTrigger key={s} value={s} className="font-display text-xs tracking-wider">
+                    {s.charAt(0).toUpperCase() + s.slice(1)}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+
+              {["all", ...SECTIONS].map((tab) => (
+                <TabsContent key={tab} value={tab}>
+                  <div className="glow-border-orange rounded-2xl bg-card overflow-hidden relative">
+                    <div className="scanline absolute inset-0 pointer-events-none opacity-5 rounded-2xl" />
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-border">
+                          <TableHead className="font-display text-xs tracking-wider text-muted-foreground">Preview</TableHead>
+                          <TableHead className="font-display text-xs tracking-wider text-muted-foreground">Name</TableHead>
+                          <TableHead className="font-display text-xs tracking-wider text-muted-foreground">Section</TableHead>
+                          <TableHead className="font-display text-xs tracking-wider text-muted-foreground">Type</TableHead>
+                          <TableHead className="font-display text-xs tracking-wider text-muted-foreground">Status</TableHead>
+                          <TableHead className="font-display text-xs tracking-wider text-muted-foreground text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {(assets || [])
+                          .filter((a) => tab === "all" || a.section === tab)
+                          .map((asset) => (
+                            <TableRow key={asset.id} className="border-border">
+                              <TableCell>
+                                <img src={asset.public_url} alt={asset.name} className="w-12 h-12 rounded-lg object-cover bg-muted" />
+                              </TableCell>
+                              <TableCell className="font-body text-sm text-foreground">{asset.name}</TableCell>
+                              <TableCell>
+                                <span className="px-2 py-1 rounded-full border border-primary/30 text-[10px] font-display tracking-wider text-primary uppercase">
+                                  {asset.section}
+                                </span>
+                              </TableCell>
+                              <TableCell className="text-xs font-body text-muted-foreground">{asset.asset_type}</TableCell>
+                              <TableCell>
+                                <span className={`w-2 h-2 rounded-full inline-block ${asset.is_active ? "bg-primary" : "bg-muted-foreground"}`} />
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <div className="flex items-center justify-end gap-1">
+                                  <Button variant="ghost" size="icon" onClick={() => toggleActive(asset)} title={asset.is_active ? "Hide" : "Show"}>
+                                    {asset.is_active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                  </Button>
+                                  <Button variant="ghost" size="icon" onClick={() => startEdit(asset)}>
+                                    <Edit className="w-4 h-4" />
+                                  </Button>
+                                  <Button variant="ghost" size="icon" onClick={() => handleDelete(asset.id)} className="text-destructive hover:text-destructive">
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        {(assets || []).filter((a) => tab === "all" || a.section === tab).length === 0 && (
+                          <TableRow>
+                            <TableCell colSpan={6} className="text-center text-muted-foreground py-8 font-body">
+                              No assets in this section yet
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </TabsContent>
+              ))}
+            </Tabs>
+          </TabsContent>
         </Tabs>
       </main>
     </div>
