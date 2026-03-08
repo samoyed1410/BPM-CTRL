@@ -31,8 +31,9 @@ const Index = () => {
         <CommunitySection />
         <EmailSignup />
         <GamificationSection />
+        </main>
 
-        <footer className="py-10 px-4 border-t border-border">
+        <footer className="py-10 px-4 border-t border-border" role="contentinfo">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-glow" />
