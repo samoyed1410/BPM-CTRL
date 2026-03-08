@@ -68,7 +68,7 @@ const EventSection = () => {
 
             <div className="flex flex-col sm:flex-row gap-3">
               <Button variant="neon" size="lg">
-                Buy Tickets
+                Enter the Frequency
               </Button>
               <Button variant="portal" size="lg">
                 Get Notified

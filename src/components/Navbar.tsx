@@ -16,8 +16,10 @@ const Navbar = () => {
             BPM<span className="text-primary"> CTRL</span>
           </span>
         </div>
-        <div className="hidden md:flex items-center gap-8 text-xs font-display tracking-[0.15em] text-muted-foreground uppercase">
+        <div className="hidden md:flex items-center gap-6 text-xs font-display tracking-[0.15em] text-muted-foreground uppercase">
           <a href="#event" className="hover:text-primary transition-colors">Event</a>
+          <a href="#broadcast" className="hover:text-primary transition-colors">Broadcast</a>
+          <a href="#style" className="hover:text-primary transition-colors">Style</a>
           <a href="#archive" className="hover:text-primary transition-colors">Archive</a>
           <a href="#mission" className="hover:text-primary transition-colors">Mission</a>
           <a href="#signal" className="hover:text-primary transition-colors">Signal</a>

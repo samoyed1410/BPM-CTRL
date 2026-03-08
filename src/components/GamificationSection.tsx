@@ -85,7 +85,7 @@ const GamificationSection = () => {
           transition={{ delay: 0.1 }}
           className="text-center font-display text-4xl md:text-6xl font-black gradient-text-orange mb-16"
         >
-          JOIN THE BPM SIGNAL
+          JOIN THE SIGNAL NETWORK
         </motion.h2>
 
         {/* Alias Input */}

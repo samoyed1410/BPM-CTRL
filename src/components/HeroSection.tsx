@@ -59,10 +59,10 @@ const HeroSection = () => {
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <Button variant="neon" size="xl">
-            Enter the Experience
+            Enter the Signal
           </Button>
           <Button variant="portal" size="xl">
-            Get Tickets
+            Access Tickets
           </Button>
         </motion.div>
 

@@ -28,7 +28,7 @@ const Index = () => {
             </span>
           </div>
           <p className="text-xs font-body text-muted-foreground">
-            Control the Rhythm. Join the Signal.
+            Dance is the language. Fashion is the expression.
           </p>
         </div>
       </footer>
