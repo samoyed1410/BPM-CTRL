@@ -4,24 +4,28 @@ import { Zap } from "lucide-react";
 const Navbar = () => {
   return (
     <motion.nav
-      initial={{ opacity: 0, y: -20 }}
+      initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="fixed top-0 left-0 right-0 z-50 bg-background/60 backdrop-blur-xl border-b border-border/50"
+      transition={{ duration: 0.8 }}
+      className="fixed top-0 left-0 right-0 z-50 bg-background/70 backdrop-blur-xl border-b border-border/40"
     >
-      <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Zap className="w-5 h-5 text-neon-pink" />
-          <span className="font-display font-bold text-lg text-foreground">RAVE<span className="text-neon-pink">COL</span></span>
+          <div className="w-2 h-2 rounded-full bg-primary animate-pulse-glow" />
+          <span className="font-display font-bold text-sm tracking-[0.15em] text-foreground">
+            BPM<span className="text-primary"> CTRL</span>
+          </span>
         </div>
-        <div className="hidden md:flex items-center gap-8 text-sm font-body text-muted-foreground">
-          <a href="#badges" className="hover:text-foreground transition-colors">Badges</a>
-          <a href="#progress" className="hover:text-foreground transition-colors">Progress</a>
-          <a href="#events" className="hover:text-foreground transition-colors">Events</a>
+        <div className="hidden md:flex items-center gap-8 text-xs font-display tracking-[0.15em] text-muted-foreground uppercase">
+          <a href="#event" className="hover:text-primary transition-colors">Event</a>
+          <a href="#archive" className="hover:text-primary transition-colors">Archive</a>
+          <a href="#mission" className="hover:text-primary transition-colors">Mission</a>
+          <a href="#signal" className="hover:text-primary transition-colors">Signal</a>
         </div>
-        <button className="px-4 py-2 rounded-lg text-sm font-display font-semibold bg-primary text-primary-foreground hover:scale-105 transition-transform">
-          Sign In
-        </button>
+        <a href="#signal" className="flex items-center gap-1.5 px-3 py-1.5 rounded border border-primary/30 text-primary text-xs font-display tracking-wider hover:bg-primary/10 transition-colors">
+          <Zap className="w-3 h-3" />
+          Join
+        </a>
       </div>
     </motion.nav>
   );
