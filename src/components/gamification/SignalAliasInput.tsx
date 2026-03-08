@@ -7,8 +7,6 @@ interface SignalAliasInputProps {
   onSubmit: (alias: string) => void;
 }
 
-const CITIES = ["Lagos", "Abuja", "Ibadan", "Port Harcourt", "Accra", "Nairobi", "London", "Berlin"];
-
 const SignalAliasInput = ({ onSubmit }: SignalAliasInputProps) => {
   const [alias, setAlias] = useState("");
 

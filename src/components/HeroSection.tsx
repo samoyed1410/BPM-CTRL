@@ -58,12 +58,16 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 1.1 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <Button variant="neon" size="xl">
-            Enter the Signal
-          </Button>
-          <Button variant="portal" size="xl">
-            Access Tickets
-          </Button>
+          <a href="#signal">
+            <Button variant="neon" size="xl">
+              Enter the Signal
+            </Button>
+          </a>
+          <a href="#event">
+            <Button variant="portal" size="xl">
+              Access Tickets
+            </Button>
+          </a>
         </motion.div>
 
         {/* Signal indicator */}
