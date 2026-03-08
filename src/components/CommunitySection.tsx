@@ -4,11 +4,19 @@ import iconSpeaker from "@/assets/icon-speaker.png";
 import iconDancer from "@/assets/icon-dancer.png";
 import iconFashion from "@/assets/icon-fashion.png";
 import iconCommunity from "@/assets/icon-community.png";
+import { useSectionContent, getContentValue } from "@/hooks/useSiteContent";
 
 const CommunitySection = () => {
+  const { data: content } = useSectionContent("community");
+
+  const title1 = getContentValue(content, "community_title_1", "We don't just throw raves.");
+  const title2 = getContentValue(content, "community_title_2", "We build culture.");
+  const body1 = getContentValue(content, "community_body_1", "BPM CTRL is a Nigerian-born movement rooted in Afro house, underground dance energy, and fashion expression. We transmit a signal that connects those who move to the same frequency.");
+  const body2 = getContentValue(content, "community_body_2", "Dance is spiritual release. Fashion is personal expression. Together they form the language of our community — a space where every body belongs and the bass hits different.");
+  const body3 = getContentValue(content, "community_body_3", "No hierarchy. No ego. Just pulse.");
+
   return (
     <section id="mission" className="py-24 px-4 relative overflow-hidden">
-      {/* Background glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[150px]" />
 
       <div className="max-w-3xl mx-auto relative z-10">
@@ -34,25 +42,15 @@ const CommunitySection = () => {
           <div className="absolute inset-0 scanline pointer-events-none opacity-20 rounded-2xl" />
           <div className="relative z-10">
             <h2 className="font-display text-2xl md:text-4xl font-black text-foreground mb-8 text-glow-orange leading-tight">
-              We don't just throw raves.
+              {title1}
               <br />
-              <span className="gradient-text-orange">We build culture.</span>
+              <span className="gradient-text-orange">{title2}</span>
             </h2>
 
             <div className="space-y-6 text-orange-amber/60 font-body text-base md:text-lg leading-relaxed">
-              <p>
-                BPM CTRL is a Nigerian-born movement rooted in Afro house, underground 
-                dance energy, and fashion expression. We transmit a signal that connects 
-                those who move to the same frequency.
-              </p>
-              <p>
-                Dance is spiritual release. Fashion is personal expression. 
-                Together they form the language of our community — a space where 
-                every body belongs and the bass hits different.
-              </p>
-              <p>
-                No hierarchy. No ego. Just pulse.
-              </p>
+              <p>{body1}</p>
+              <p>{body2}</p>
+              <p>{body3}</p>
             </div>
 
             <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
