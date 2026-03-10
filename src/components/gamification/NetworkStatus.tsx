@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Users, Globe, Clock } from "lucide-react";
-
-const NEXT_RAVE = new Date("2026-06-01T22:00:00");
+import { useSectionContent, getContentValue } from "@/hooks/useSiteContent";
 
 const useCountdown = (target: Date) => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
@@ -28,6 +27,7 @@ const useCountdown = (target: Date) => {
 const useFluctuatingNumber = (base: number, range: number) => {
   const [value, setValue] = useState(base);
   useEffect(() => {
+    setValue(base + Math.floor(Math.random() * range) - Math.floor(range / 2));
     const id = setInterval(() => {
       setValue(base + Math.floor(Math.random() * range) - Math.floor(range / 2));
     }, 3000);
@@ -37,9 +37,17 @@ const useFluctuatingNumber = (base: number, range: number) => {
 };
 
 const NetworkStatus = () => {
-  const countdown = useCountdown(NEXT_RAVE);
-  const agentsOnline = useFluctuatingNumber(247, 40);
-  const totalMembers = useFluctuatingNumber(1842, 10);
+  const { data: content } = useSectionContent("gamification");
+
+  const agentsBase = parseInt(getContentValue(content, "agents_online_base", "247")) || 247;
+  const membersBase = parseInt(getContentValue(content, "total_members_base", "1842")) || 1842;
+  const countdownDateStr = getContentValue(content, "countdown_date", "2026-06-01T22:00:00");
+  const countdownLabel = getContentValue(content, "countdown_label", "Next Frequency Drop");
+
+  const targetDate = useMemo(() => new Date(countdownDateStr), [countdownDateStr]);
+  const countdown = useCountdown(targetDate);
+  const agentsOnline = useFluctuatingNumber(agentsBase, 40);
+  const totalMembers = useFluctuatingNumber(membersBase, 10);
 
   return (
     <div className="glow-border-orange rounded-2xl bg-card p-6 md:p-8 relative overflow-hidden">
@@ -68,7 +76,7 @@ const NetworkStatus = () => {
           <div className="flex items-center justify-center gap-2 mb-3">
             <Clock className="w-4 h-4 text-primary" />
             <p className="text-[10px] font-display tracking-[0.3em] text-muted-foreground uppercase">
-              Next Frequency Drop
+              {countdownLabel}
             </p>
           </div>
           <div className="flex justify-center gap-4 md:gap-6">
