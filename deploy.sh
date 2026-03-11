@@ -3,8 +3,11 @@ set -euo pipefail
 
 # ═══════════════════════════════════════════════════════════════
 # BPM CTRL — Ubuntu VPS Deployment Script
-# Deploys a Vite/React static site with Nginx, SSL (Certbot),
-# and optional Supabase env vars.
+# Deploys a Vite/React static site with Nginx + SSL.
+# ⚠️  Safe for co-hosting alongside other apps (e.g. Node/PM2).
+#     - Does NOT remove other Nginx site configs
+#     - Does NOT upgrade Node.js if already installed
+#     - Does NOT force-reset UFW firewall
 # ═══════════════════════════════════════════════════════════════
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; CYAN='\033[0;36m'; NC='\033[0m'
@@ -45,18 +48,21 @@ read -rp "Continue? (y/N): " CONFIRM
 [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]] && { info "Aborted."; exit 0; }
 
 # ─── System dependencies ──────────────────────────────────────
-info "Updating system packages..."
+info "Installing required packages..."
 sudo apt-get update -qq
 sudo apt-get install -y -qq nginx certbot python3-certbot-nginx curl unzip git
 
-# Install Node.js 20 via NodeSource if not present
-if ! command -v node &>/dev/null || [[ "$(node -v | cut -d. -f1 | tr -d v)" -lt 18 ]]; then
-  info "Installing Node.js 20..."
+# Install Node.js ONLY if not already present — preserves existing version
+# needed by other apps on this VPS (e.g. khalspuppeteer uses Node 18).
+if ! command -v node &>/dev/null; then
+  info "No Node.js found — installing Node.js 20..."
   curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
   sudo apt-get install -y -qq nodejs
+else
+  info "Node.js $(node -v) already installed — keeping existing version."
 fi
 
-# Install bun for faster builds (optional, falls back to npm)
+# Install bun for faster builds (falls back to npm)
 if ! command -v bun &>/dev/null; then
   info "Installing Bun..."
   curl -fsSL https://bun.sh/install | bash
@@ -67,7 +73,6 @@ fi
 info "Installing dependencies..."
 cd "$REPO_DIR"
 
-# Write env file
 cat > .env.production <<EOF
 VITE_SUPABASE_URL=${SUPABASE_URL}
 VITE_SUPABASE_PUBLISHABLE_KEY=${SUPABASE_KEY}
@@ -90,7 +95,9 @@ sudo rm -rf "${DEPLOY_DIR:?}/"*
 sudo cp -r dist/* "$DEPLOY_DIR/"
 
 # ─── Nginx config ─────────────────────────────────────────────
-info "Configuring Nginx..."
+# Creates a separate server block for THIS domain only.
+# Does NOT touch /etc/nginx/sites-enabled/default or other site configs.
+info "Configuring Nginx for $DOMAIN..."
 sudo tee /etc/nginx/sites-available/"$DOMAIN" > /dev/null <<NGINX
 server {
     listen 80;
@@ -125,7 +132,7 @@ server {
 NGINX
 
 sudo ln -sf /etc/nginx/sites-available/"$DOMAIN" /etc/nginx/sites-enabled/
-sudo rm -f /etc/nginx/sites-enabled/default 2>/dev/null || true
+# ⚠️  Intentionally NOT removing /etc/nginx/sites-enabled/default or other configs
 sudo nginx -t && sudo systemctl reload nginx
 
 # ─── DNS Check ────────────────────────────────────────────────
@@ -144,8 +151,7 @@ echo ""
 read -rp "Press Enter once DNS is pointed to this server (or 'skip' to skip SSL)... " DNS_CONFIRM
 
 if [[ "$DNS_CONFIRM" != "skip" ]]; then
-  # ─── SSL with Certbot ─────────────────────────────────────
-  info "Obtaining SSL certificate..."
+  info "Obtaining SSL certificate for $DOMAIN..."
   sudo certbot --nginx -d "$DOMAIN" -d "www.$DOMAIN" --email "$CERT_EMAIL" --agree-tos --non-interactive --redirect
 
   info "Setting up auto-renewal..."
@@ -156,11 +162,14 @@ else
 fi
 
 # ─── UFW Firewall ─────────────────────────────────────────────
+# Only ADD rules — never force-reset or disable existing firewall.
 if command -v ufw &>/dev/null; then
-  info "Configuring firewall..."
-  sudo ufw allow 'Nginx Full' >/dev/null 2>&1
-  sudo ufw allow OpenSSH >/dev/null 2>&1
-  sudo ufw --force enable >/dev/null 2>&1
+  info "Ensuring firewall allows HTTP/HTTPS..."
+  sudo ufw allow 'Nginx Full' >/dev/null 2>&1 || true
+  sudo ufw allow OpenSSH >/dev/null 2>&1 || true
+  if ! sudo ufw status | grep -q "Status: active"; then
+    sudo ufw --force enable >/dev/null 2>&1
+  fi
 fi
 
 # ─── Done ─────────────────────────────────────────────────────
@@ -173,5 +182,5 @@ info "Site: https://$DOMAIN"
 info "Admin: https://$DOMAIN/admin/login"
 echo ""
 info "To redeploy after changes:"
-info "  cd $REPO_DIR && git pull && bash deploy.sh"
+info "  cd $REPO_DIR && git pull && bun run build && sudo cp -r dist/* $DEPLOY_DIR/"
 echo ""
