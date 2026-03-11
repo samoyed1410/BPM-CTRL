@@ -12,6 +12,8 @@ const HeroSection = () => {
   const subtitle2 = getContentValue(content, "hero_subtitle_2", "Fashion is the expression.");
   const ctaPrimary = getContentValue(content, "hero_cta_primary", "Enter the Signal");
   const ctaSecondary = getContentValue(content, "hero_cta_secondary", "Access Tickets");
+  const ctaPrimaryHref = getContentValue(content, "hero_cta_primary_href", "#signal");
+  const ctaSecondaryHref = getContentValue(content, "hero_cta_secondary_href", "#event");
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -64,12 +66,12 @@ const HeroSection = () => {
           transition={{ duration: 0.8, delay: 1.1 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <a href="#signal">
+          <a href={ctaPrimaryHref}>
             <Button variant="neon" size="xl">
               {ctaPrimary}
             </Button>
           </a>
-          <a href="#event">
+          <a href={ctaSecondaryHref} target={ctaSecondaryHref.startsWith("http") ? "_blank" : undefined} rel={ctaSecondaryHref.startsWith("http") ? "noopener noreferrer" : undefined}>
             <Button variant="portal" size="xl">
               {ctaSecondary}
             </Button>
