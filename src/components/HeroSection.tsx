@@ -6,6 +6,7 @@ import { useSiteLinks } from "@/hooks/useSiteLinks";
 
 const HeroSection = () => {
   const { data: content } = useSectionContent("hero");
+  const links = useSiteLinks();
 
   const tagline = getContentValue(content, "hero_tagline", "Transmitting Signal");
   const title = getContentValue(content, "hero_title", "BPM CTRL");
@@ -14,7 +15,7 @@ const HeroSection = () => {
   const ctaPrimary = getContentValue(content, "hero_cta_primary", "Enter the Signal");
   const ctaSecondary = getContentValue(content, "hero_cta_secondary", "Access Tickets");
   const ctaPrimaryHref = getContentValue(content, "hero_cta_primary_href", "#signal");
-  const ctaSecondaryHref = getContentValue(content, "hero_cta_secondary_href", "#event");
+  const ctaSecondaryHref = links.accessTicket || getContentValue(content, "hero_cta_secondary_href", "#event");
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
