@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import FrequencyWaves from "@/components/FrequencyWaves";
 import { useSectionContent, getContentValue } from "@/hooks/useSiteContent";
+import { useSiteLinks } from "@/hooks/useSiteLinks";
 
 const HeroSection = () => {
   const { data: content } = useSectionContent("hero");
