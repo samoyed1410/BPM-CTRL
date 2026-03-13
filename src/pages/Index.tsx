@@ -26,6 +26,7 @@ const Index = () => {
           Skip to content
         </a>
         <Navbar />
+        <TransmissionTicker />
         <main id="main-content">
         <HeroSection />
         <EventSection />
