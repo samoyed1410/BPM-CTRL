@@ -12,6 +12,7 @@ import { Trash2, Plus, Edit, Eye, EyeOff, LogOut, Upload, ArrowLeft, FileText, I
 import type { SiteAsset } from "@/hooks/useSiteAssets";
 import ContentManager from "@/components/admin/ContentManager";
 import LinksManager from "@/components/admin/LinksManager";
+import TransmissionCenter from "@/components/admin/TransmissionCenter";
 
 const SECTIONS = ["hero", "event", "broadcast", "style", "archive", "community", "gamification", "general"];
 
