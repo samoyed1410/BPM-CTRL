@@ -185,6 +185,9 @@ const Admin = () => {
             <TabsTrigger value="links" className="font-display text-xs tracking-wider gap-2">
               <Link2 className="w-3.5 h-3.5" /> Links
             </TabsTrigger>
+            <TabsTrigger value="transmission" className="font-display text-xs tracking-wider gap-2">
+              <Radio className="w-3.5 h-3.5" /> Transmission
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="content">
