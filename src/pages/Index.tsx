@@ -10,6 +10,7 @@ import GamificationSection from "@/components/GamificationSection";
 import EmailSignup from "@/components/EmailSignup";
 import BackToTop from "@/components/BackToTop";
 import SplashScreen from "@/components/SplashScreen";
+import TransmissionTicker from "@/components/TransmissionTicker";
 import { useSiteLinks } from "@/hooks/useSiteLinks";
 
 const Index = () => {
