@@ -198,6 +198,10 @@ const Admin = () => {
             <LinksManager />
           </TabsContent>
 
+          <TabsContent value="transmission">
+            <TransmissionCenter />
+          </TabsContent>
+
           <TabsContent value="assets">
             <div className="flex items-center justify-between mb-8">
               <div>
