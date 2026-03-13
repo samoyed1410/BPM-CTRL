@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      radio_tracks: {
+        Row: {
+          artist: string
+          audio_url: string
+          cover_image_url: string | null
+          created_at: string
+          description: string | null
+          duration_seconds: number | null
+          id: string
+          is_active: boolean
+          sort_order: number
+          storage_path: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          artist?: string
+          audio_url: string
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          duration_seconds?: number | null
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          storage_path?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          artist?: string
+          audio_url?: string
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          duration_seconds?: number | null
+          id?: string
+          is_active?: boolean
+          sort_order?: number
+          storage_path?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_assets: {
         Row: {
           asset_type: string
