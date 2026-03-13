@@ -8,10 +8,11 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Trash2, Plus, Edit, Eye, EyeOff, LogOut, Upload, ArrowLeft, FileText, Image as ImageIcon, Link2, Play, Music, Video } from "lucide-react";
+import { Trash2, Plus, Edit, Eye, EyeOff, LogOut, Upload, ArrowLeft, FileText, Image as ImageIcon, Link2, Play, Music, Video, Radio } from "lucide-react";
 import type { SiteAsset } from "@/hooks/useSiteAssets";
 import ContentManager from "@/components/admin/ContentManager";
 import LinksManager from "@/components/admin/LinksManager";
+import TransmissionCenter from "@/components/admin/TransmissionCenter";
 
 const SECTIONS = ["hero", "event", "broadcast", "style", "archive", "community", "gamification", "general"];
 
@@ -184,6 +185,9 @@ const Admin = () => {
             <TabsTrigger value="links" className="font-display text-xs tracking-wider gap-2">
               <Link2 className="w-3.5 h-3.5" /> Links
             </TabsTrigger>
+            <TabsTrigger value="transmission" className="font-display text-xs tracking-wider gap-2">
+              <Radio className="w-3.5 h-3.5" /> Transmission
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="content">
@@ -192,6 +196,10 @@ const Admin = () => {
 
           <TabsContent value="links">
             <LinksManager />
+          </TabsContent>
+
+          <TabsContent value="transmission">
+            <TransmissionCenter />
           </TabsContent>
 
           <TabsContent value="assets">
