@@ -4,15 +4,36 @@ import { Radio } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface SignalAliasInputProps {
-  onSubmit: (alias: string) => void;
+  onSubmit: (alias: string) => Promise<void> | void;
+  loading?: boolean;
 }
 
-const SignalAliasInput = ({ onSubmit }: SignalAliasInputProps) => {
+const SignalAliasInput = ({ onSubmit, loading = false }: SignalAliasInputProps) => {
   const [alias, setAlias] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = () => {
-    if (!alias.trim()) return;
-    onSubmit(alias.trim());
+  const validateAlias = (value: string) => {
+    const trimmed = value.trim();
+    if (trimmed.length < 3 || trimmed.length > 32) {
+      return "Alias must be 3-32 characters.";
+    }
+    if (!/^[A-Za-z0-9 _.-]+$/.test(trimmed)) {
+      return "Use letters, numbers, spaces, dots, dashes, or underscores only.";
+    }
+    return "";
+  };
+
+  const handleSubmit = async () => {
+    const trimmed = alias.trim();
+    const validationError = validateAlias(trimmed);
+
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    setError("");
+    await onSubmit(trimmed);
   };
 
   return (
@@ -37,12 +58,14 @@ const SignalAliasInput = ({ onSubmit }: SignalAliasInputProps) => {
             onChange={(e) => setAlias(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
             placeholder="Enter your rave identity..."
+            maxLength={32}
             className="flex-1 bg-muted border border-border rounded-lg px-4 py-3 text-foreground font-body placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-all"
           />
-          <Button variant="neon" size="lg" onClick={handleSubmit}>
-            Activate Signal
+          <Button variant="neon" size="lg" onClick={handleSubmit} disabled={loading}>
+            {loading ? "Activating..." : "Activate Signal"}
           </Button>
         </div>
+        {error && <p className="mt-3 text-xs font-body text-destructive">{error}</p>}
       </div>
     </motion.div>
   );
