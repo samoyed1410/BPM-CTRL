@@ -36,6 +36,19 @@ read -rp "Email for Certbot / Let's Encrypt SSL: " CERT_EMAIL
 read -rp "Supabase URL (VITE_SUPABASE_URL): " SUPABASE_URL
 read -rp "Supabase anon key (VITE_SUPABASE_PUBLISHABLE_KEY): " SUPABASE_KEY
 
+# Validate credentials early to catch URL/key mismatch (common cause of auth fetch failures)
+AUTH_CHECK_STATUS=$(curl -s -o /tmp/bpmctrl-auth-check.json -w "%{http_code}" \
+  -H "apikey: ${SUPABASE_KEY}" \
+  -H "Authorization: Bearer ${SUPABASE_KEY}" \
+  "${SUPABASE_URL}/auth/v1/settings" || true)
+
+if [[ "$AUTH_CHECK_STATUS" -lt 200 || "$AUTH_CHECK_STATUS" -ge 300 ]]; then
+  warn "Auth preflight check failed (HTTP $AUTH_CHECK_STATUS)."
+  warn "This usually means URL/key mismatch and can cause signup/login 'Failed to fetch' on VPS."
+else
+  info "Auth preflight check passed."
+fi
+
 DEPLOY_DIR="/var/www/${DOMAIN}"
 REPO_DIR="$(pwd)"
 
