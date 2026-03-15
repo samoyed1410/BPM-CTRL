@@ -36,6 +36,19 @@ read -rp "Email for Certbot / Let's Encrypt SSL: " CERT_EMAIL
 read -rp "Supabase URL (VITE_SUPABASE_URL): " SUPABASE_URL
 read -rp "Supabase anon key (VITE_SUPABASE_PUBLISHABLE_KEY): " SUPABASE_KEY
 
+# Validate credentials early to catch URL/key mismatch (common cause of auth fetch failures)
+AUTH_CHECK_STATUS=$(curl -s -o /tmp/bpmctrl-auth-check.json -w "%{http_code}" \
+  -H "apikey: ${SUPABASE_KEY}" \
+  -H "Authorization: Bearer ${SUPABASE_KEY}" \
+  "${SUPABASE_URL}/auth/v1/settings" || true)
+
+if [[ "$AUTH_CHECK_STATUS" -lt 200 || "$AUTH_CHECK_STATUS" -ge 300 ]]; then
+  warn "Auth preflight check failed (HTTP $AUTH_CHECK_STATUS)."
+  warn "This usually means URL/key mismatch and can cause signup/login 'Failed to fetch' on VPS."
+else
+  info "Auth preflight check passed."
+fi
+
 DEPLOY_DIR="/var/www/${DOMAIN}"
 REPO_DIR="$(pwd)"
 
@@ -180,6 +193,15 @@ echo -e "${GREEN}╚════════════════════
 echo ""
 info "Site: https://$DOMAIN"
 info "Admin: https://$DOMAIN/admin/login"
+echo ""
+warn "Auth checklist (required for signup/login on VPS):"
+echo "  1. In your backend auth settings, set Site URL to: https://$DOMAIN"
+echo "  2. Add Redirect URLs:"
+echo "     - https://$DOMAIN"
+echo "     - https://$DOMAIN/admin/login"
+echo "     - https://www.$DOMAIN"
+echo "     - https://www.$DOMAIN/admin/login"
+echo "  3. Ensure VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY are from the SAME project"
 echo ""
 info "To redeploy after changes:"
 info "  cd $REPO_DIR && git pull && bun run build && sudo cp -r dist/* $DEPLOY_DIR/"

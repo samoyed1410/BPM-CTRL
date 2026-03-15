@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Zap } from "lucide-react";
 import SignalAliasInput from "./gamification/SignalAliasInput";
@@ -8,10 +8,28 @@ import LevelProgress, { LEVELS } from "./gamification/LevelProgress";
 import NetworkStatus from "./gamification/NetworkStatus";
 import SecretAccess from "./gamification/SecretAccess";
 import Leaderboard from "./gamification/Leaderboard";
+import { useToast } from "@/hooks/use-toast";
+import { useSignalLeaderboard, useSubmitSignalAlias } from "@/hooks/useSignalNetwork";
 
 const CITIES = ["Lagos", "Abuja", "Ibadan", "Port Harcourt", "Accra", "Nairobi", "London", "Berlin"];
+const SIGNAL_STORAGE_KEY = "bpmctrl_signal_identity";
+
+const getLevelFromXp = (xp: number) => {
+  let level = 0;
+  for (let i = LEVELS.length - 1; i >= 0; i -= 1) {
+    if (xp >= LEVELS[i].xpNeeded) {
+      level = i;
+      break;
+    }
+  }
+  return level;
+};
 
 const GamificationSection = () => {
+  const { toast } = useToast();
+  const { data: leaderboard = [] } = useSignalLeaderboard();
+  const submitAlias = useSubmitSignalAlias();
+
   const [alias, setAlias] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [currentLevel, setCurrentLevel] = useState(0);
@@ -20,21 +38,66 @@ const GamificationSection = () => {
   const [badgeUnlocked, setBadgeUnlocked] = useState(false);
   const [location] = useState(() => CITIES[Math.floor(Math.random() * CITIES.length)]);
 
-  const handleSubmit = (newAlias: string) => {
-    setAlias(newAlias);
-    setSubmitted(true);
-    setXp(50);
+  useEffect(() => {
+    const storedRaw = localStorage.getItem(SIGNAL_STORAGE_KEY);
+    if (!storedRaw) return;
 
-    setTimeout(() => {
-      setBadgeUnlocked(true);
-      setCurrentLevel(1);
-      setXp(120);
-    }, 1500);
+    try {
+      const stored = JSON.parse(storedRaw) as { alias: string; xp: number };
+      if (!stored.alias) return;
+      setAlias(stored.alias);
+      setXp(stored.xp || 0);
+      setCurrentLevel(getLevelFromXp(stored.xp || 0));
+      setSubmitted(true);
+      setBadgeUnlocked((stored.xp || 0) >= 100);
+      setShowSecret((stored.xp || 0) >= 100);
+    } catch {
+      localStorage.removeItem(SIGNAL_STORAGE_KEY);
+    }
+  }, []);
 
-    setTimeout(() => {
-      setShowSecret(true);
-    }, 3500);
-  };
+  const handleSubmit = useCallback(
+    async (newAlias: string) => {
+      try {
+        const result = await submitAlias.mutateAsync(newAlias);
+
+        setAlias(result.alias);
+        setSubmitted(true);
+        setXp(result.xp);
+
+        const level = getLevelFromXp(result.xp);
+        setCurrentLevel(level);
+
+        localStorage.setItem(
+          SIGNAL_STORAGE_KEY,
+          JSON.stringify({ alias: result.alias, xp: result.xp })
+        );
+
+        setBadgeUnlocked(false);
+        setShowSecret(false);
+
+        setTimeout(() => {
+          setBadgeUnlocked(result.xp >= 100);
+        }, 700);
+
+        setTimeout(() => {
+          setShowSecret(result.xp >= 100);
+        }, 1800);
+      } catch (err: any) {
+        toast({
+          title: "Signal activation failed",
+          description: err.message || "Please try again.",
+          variant: "destructive",
+        });
+      }
+    },
+    [submitAlias, toast]
+  );
+
+  const leaderboardEntries = useMemo(
+    () => leaderboard.map((entry) => ({ alias: entry.alias, xp: entry.xp })),
+    [leaderboard]
+  );
 
   return (
     <section id="signal" className="py-24 px-4 relative">
@@ -62,10 +125,9 @@ const GamificationSection = () => {
         </motion.h2>
 
         {!submitted ? (
-          <SignalAliasInput onSubmit={handleSubmit} />
+          <SignalAliasInput onSubmit={handleSubmit} loading={submitAlias.isPending} />
         ) : (
           <div className="space-y-6">
-            {/* Badge unlock notification */}
             <AnimatePresence>
               {badgeUnlocked && (
                 <motion.div
@@ -81,7 +143,6 @@ const GamificationSection = () => {
               )}
             </AnimatePresence>
 
-            {/* Profile + Network Status row */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <ProfileCard
                 alias={alias}
@@ -92,19 +153,13 @@ const GamificationSection = () => {
               <NetworkStatus />
             </div>
 
-            {/* Level Progress */}
             <LevelProgress currentLevel={currentLevel} xp={xp} />
 
-            {/* Badges */}
             <BadgeGrid unlockedCount={badgeUnlocked ? 1 : 0} />
 
-            {/* Leaderboard */}
-            <Leaderboard userAlias={alias} userXp={xp} />
+            <Leaderboard userAlias={alias} userXp={xp} entries={leaderboardEntries} />
 
-            {/* Secret Access */}
-            <AnimatePresence>
-              {showSecret && <SecretAccess />}
-            </AnimatePresence>
+            <AnimatePresence>{showSecret && <SecretAccess />}</AnimatePresence>
           </div>
         )}
       </div>

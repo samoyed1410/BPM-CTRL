@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { href: "#broadcast", label: "Broadcast" },
   { href: "#style", label: "Style" },
   { href: "#archive", label: "Archive" },
+  { href: "#articles", label: "Articles" },
   { href: "#mission", label: "Mission" },
   { href: "#signal", label: "Signal" },
 ];

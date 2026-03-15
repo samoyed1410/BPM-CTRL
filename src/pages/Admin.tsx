@@ -8,13 +8,14 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Trash2, Plus, Edit, Eye, EyeOff, LogOut, Upload, ArrowLeft, FileText, Image as ImageIcon, Link2, Play, Music, Video, Radio } from "lucide-react";
+import { Trash2, Plus, Edit, Eye, EyeOff, LogOut, Upload, ArrowLeft, FileText, Image as ImageIcon, Link2, Music, Video, Radio, Newspaper } from "lucide-react";
 import type { SiteAsset } from "@/hooks/useSiteAssets";
 import ContentManager from "@/components/admin/ContentManager";
 import LinksManager from "@/components/admin/LinksManager";
 import TransmissionCenter from "@/components/admin/TransmissionCenter";
+import ArticlesManager from "@/components/admin/ArticlesManager";
 
-const SECTIONS = ["hero", "event", "broadcast", "style", "archive", "community", "gamification", "general"];
+const SECTIONS = ["hero", "event", "broadcast", "style", "archive", "articles", "community", "gamification", "general"];
 
 const ASSET_TYPES = [
   { value: "image", label: "Image" },
@@ -188,6 +189,9 @@ const Admin = () => {
             <TabsTrigger value="transmission" className="font-display text-xs tracking-wider gap-2">
               <Radio className="w-3.5 h-3.5" /> Transmission
             </TabsTrigger>
+            <TabsTrigger value="articles" className="font-display text-xs tracking-wider gap-2">
+              <Newspaper className="w-3.5 h-3.5" /> Articles
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="content">
@@ -200,6 +204,10 @@ const Admin = () => {
 
           <TabsContent value="transmission">
             <TransmissionCenter />
+          </TabsContent>
+
+          <TabsContent value="articles">
+            <ArticlesManager />
           </TabsContent>
 
           <TabsContent value="assets">

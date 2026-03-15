@@ -6,6 +6,7 @@ import BroadcastSection from "@/components/BroadcastSection";
 import StyleIndexSection from "@/components/StyleIndexSection";
 import ArchiveSection from "@/components/ArchiveSection";
 import CommunitySection from "@/components/CommunitySection";
+import ArticlesSection from "@/components/ArticlesSection";
 import GamificationSection from "@/components/GamificationSection";
 import EmailSignup from "@/components/EmailSignup";
 import BackToTop from "@/components/BackToTop";
@@ -33,6 +34,7 @@ const Index = () => {
         <BroadcastSection />
         <StyleIndexSection />
         <ArchiveSection />
+        <ArticlesSection />
         <CommunitySection />
         <EmailSignup />
         <GamificationSection />
