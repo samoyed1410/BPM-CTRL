@@ -59,6 +59,36 @@ export type Database = {
         }
         Relationships: []
       }
+      signal_identities: {
+        Row: {
+          alias: string
+          alias_normalized: string
+          created_at: string
+          id: string
+          join_count: number
+          updated_at: string
+          xp: number
+        }
+        Insert: {
+          alias: string
+          alias_normalized: string
+          created_at?: string
+          id?: string
+          join_count?: number
+          updated_at?: string
+          xp?: number
+        }
+        Update: {
+          alias?: string
+          alias_normalized?: string
+          created_at?: string
+          id?: string
+          join_count?: number
+          updated_at?: string
+          xp?: number
+        }
+        Relationships: []
+      }
       site_assets: {
         Row: {
           asset_type: string
@@ -169,6 +199,17 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      submit_signal_alias: {
+        Args: { p_alias: string }
+        Returns: {
+          alias: string
+          created_at: string
+          id: string
+          join_count: number
+          updated_at: string
+          xp: number
+        }[]
       }
     }
     Enums: {
