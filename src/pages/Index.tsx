@@ -34,6 +34,7 @@ const Index = () => {
         <BroadcastSection />
         <StyleIndexSection />
         <ArchiveSection />
+        <ArticlesSection />
         <CommunitySection />
         <EmailSignup />
         <GamificationSection />

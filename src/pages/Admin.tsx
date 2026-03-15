@@ -189,6 +189,9 @@ const Admin = () => {
             <TabsTrigger value="transmission" className="font-display text-xs tracking-wider gap-2">
               <Radio className="w-3.5 h-3.5" /> Transmission
             </TabsTrigger>
+            <TabsTrigger value="articles" className="font-display text-xs tracking-wider gap-2">
+              <Newspaper className="w-3.5 h-3.5" /> Articles
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="content">
@@ -201,6 +204,10 @@ const Admin = () => {
 
           <TabsContent value="transmission">
             <TransmissionCenter />
+          </TabsContent>
+
+          <TabsContent value="articles">
+            <ArticlesManager />
           </TabsContent>
 
           <TabsContent value="assets">

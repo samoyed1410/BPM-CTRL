@@ -15,6 +15,11 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const getNetworkHint = (message: string) => {
+    if (!message.toLowerCase().includes("fetch")) return message;
+    return "Network/auth configuration issue: verify backend URL + key pair, and ensure your production domain is in Auth Site URL and Redirect URLs.";
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -22,7 +27,7 @@ const AdminLogin = () => {
     if (mode === "signup") {
       const { error } = await signUp(email, password);
       if (error) {
-        toast({ title: "Signup failed", description: error.message, variant: "destructive" });
+        toast({ title: "Signup failed", description: getNetworkHint(error.message), variant: "destructive" });
       } else {
         toast({
           title: "Account created",
@@ -33,7 +38,7 @@ const AdminLogin = () => {
     } else {
       const { error } = await signIn(email, password);
       if (error) {
-        toast({ title: "Login failed", description: error.message, variant: "destructive" });
+        toast({ title: "Login failed", description: getNetworkHint(error.message), variant: "destructive" });
       } else {
         navigate("/admin");
       }
