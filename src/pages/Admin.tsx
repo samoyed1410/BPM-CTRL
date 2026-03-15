@@ -15,7 +15,7 @@ import LinksManager from "@/components/admin/LinksManager";
 import TransmissionCenter from "@/components/admin/TransmissionCenter";
 import ArticlesManager from "@/components/admin/ArticlesManager";
 
-const SECTIONS = ["hero", "event", "broadcast", "style", "archive", "community", "gamification", "general"];
+const SECTIONS = ["hero", "event", "broadcast", "style", "archive", "articles", "community", "gamification", "general"];
 
 const ASSET_TYPES = [
   { value: "image", label: "Image" },
