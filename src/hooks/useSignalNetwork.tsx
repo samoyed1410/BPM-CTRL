@@ -11,15 +11,16 @@ export interface SignalIdentity {
 }
 
 const fetchSignalLeaderboard = async (): Promise<SignalIdentity[]> => {
-  const { data, error } = await supabase
-    .from("signal_identities" as any)
+  const client = supabase as any;
+  const { data, error } = await client
+    .from("signal_identities")
     .select("id, alias, xp, join_count, created_at, updated_at")
     .order("xp", { ascending: false })
     .order("updated_at", { ascending: false })
     .limit(10);
 
   if (error) throw error;
-  return ((data as SignalIdentity[]) || []);
+  return (data || []) as SignalIdentity[];
 };
 
 export const useSignalLeaderboard = () => {
