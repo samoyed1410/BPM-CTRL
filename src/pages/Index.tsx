@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import logo from "@/assets/logo.png";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import EventSection from "@/components/EventSection";
