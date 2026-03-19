@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Zap, Menu, X, Instagram, Twitter, Music } from "lucide-react";
+import logo from "@/assets/logo.png";
 import { useSiteLinks } from "@/hooks/useSiteLinks";
 
 const NAV_LINKS = [
@@ -28,10 +29,7 @@ const Navbar = () => {
     >
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-primary animate-pulse-glow" />
-          <span className="font-display font-bold text-sm tracking-[0.15em] text-foreground">
-            BPM<span className="text-primary"> CTRL</span>
-          </span>
+          <img src={logo} alt="BPM CTRL" className="h-8 w-auto" />
         </a>
 
         <div className="hidden md:flex items-center gap-6 text-xs font-display tracking-[0.15em] text-muted-foreground uppercase">
