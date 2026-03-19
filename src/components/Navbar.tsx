@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Zap, Menu, X, Instagram, Twitter, Music } from "lucide-react";
+import logo from "@/assets/logo.png";
 import { useSiteLinks } from "@/hooks/useSiteLinks";
 
 const NAV_LINKS = [
