@@ -73,7 +73,8 @@ const Radio = () => {
             <motion.div
               animate={{ opacity: [0.15, 0.35, 0.15] }}
               transition={{ duration: 2.4, repeat: Infinity }}
-              className="absolute inset-0 bg-gradient-radial from-destructive/40 via-primary/20 to-transparent pointer-events-none"
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: "radial-gradient(circle at center, hsl(var(--destructive)/0.4), hsl(var(--primary)/0.2) 40%, transparent 70%)" }}
             />
           )}
 
