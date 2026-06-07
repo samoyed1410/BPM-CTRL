@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 
 const Admin = lazy(() => import("./pages/Admin"));
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
+const Radio = lazy(() => import("./pages/Radio"));
 
 const queryClient = new QueryClient();
 
