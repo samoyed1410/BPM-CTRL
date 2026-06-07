@@ -127,6 +127,14 @@ export const useRadioPlayer = () => {
 
   const currentTrack = tracks && tracks.length > 0 ? tracks[currentTrackIndex % tracks.length] : null;
 
+  const [bpm, setBpm] = useState<number | null>(null);
+  const [streamError, setStreamError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const hlsRef = useRef<Hls | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+
   const playNext = useCallback(() => {
     if (tracks && tracks.length > 0) {
       setCurrentTrackIndex((index) => (index + 1) % tracks.length);
@@ -137,10 +145,14 @@ export const useRadioPlayer = () => {
     setIsPlaying((value) => !value);
   }, []);
 
+  // Setup audio element + WebAudio graph (for waveform analyser)
   useEffect(() => {
     if (!audioRef.current) {
-      audioRef.current = new Audio();
-      audioRef.current.addEventListener("ended", playNext);
+      const audio = new Audio();
+      audio.crossOrigin = "anonymous"; // best-effort; will silently fail if server doesn't allow
+      audio.preload = "none";
+      audioRef.current = audio;
+      audio.addEventListener("ended", playNext);
     }
 
     return () => {
@@ -148,42 +160,130 @@ export const useRadioPlayer = () => {
         audioRef.current.pause();
         audioRef.current.removeEventListener("ended", playNext);
       }
+      hlsRef.current?.destroy();
+      hlsRef.current = null;
     };
   }, [playNext]);
 
+  const ensureAnalyser = useCallback(() => {
+    if (!audioRef.current) return null;
+    if (!audioCtxRef.current) {
+      try {
+        const Ctx = window.AudioContext || (window as any).webkitAudioContext;
+        audioCtxRef.current = new Ctx();
+      } catch {
+        return null;
+      }
+    }
+    if (!analyserRef.current && audioCtxRef.current) {
+      try {
+        const analyser = audioCtxRef.current.createAnalyser();
+        analyser.fftSize = 2048;
+        const src = audioCtxRef.current.createMediaElementSource(audioRef.current);
+        src.connect(analyser);
+        analyser.connect(audioCtxRef.current.destination);
+        analyserRef.current = analyser;
+        sourceNodeRef.current = src;
+      } catch {
+        // Cross-origin streams without CORS headers will throw — fall back to silent analyser
+        return null;
+      }
+    }
+    return analyserRef.current;
+  }, []);
+
+  // Load source — supports MP3 and HLS (.m3u8)
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
+    // Tear down any existing HLS instance
+    hlsRef.current?.destroy();
+    hlsRef.current = null;
+    setStreamError(null);
+
+    const loadSrc = (url: string) => {
+      const isHls = /\.m3u8(\?|$)/i.test(url);
+      if (isHls && Hls.isSupported()) {
+        const hls = new Hls({ enableWorker: true, lowLatencyMode: true });
+        hls.loadSource(url);
+        hls.attachMedia(audio);
+        hls.on(Hls.Events.ERROR, (_e, data) => {
+          if (data.fatal) {
+            setStreamError(data.details || "Stream error");
+            if (retryCount < 3) {
+              setTimeout(() => setRetryCount((c) => c + 1), 2000);
+            }
+          }
+        });
+        hlsRef.current = hls;
+      } else {
+        audio.src = url;
+      }
+    };
+
     if (radioState?.mode === "live" && radioState.streamUrl) {
-      audio.src = radioState.streamUrl;
-      if (isPlaying) audio.play().catch(() => {});
+      loadSrc(radioState.streamUrl);
+      if (isPlaying) audio.play().catch((e) => setStreamError(e.message));
       return;
     }
 
     if (radioState?.mode === "prerecorded" && currentTrack?.audio_url) {
-      audio.src = currentTrack.audio_url;
-      if (isPlaying) audio.play().catch(() => {});
+      loadSrc(currentTrack.audio_url);
+      if (isPlaying) audio.play().catch((e) => setStreamError(e.message));
       return;
     }
 
     audio.pause();
     audio.src = "";
     setIsPlaying(false);
-  }, [radioState?.mode, radioState?.streamUrl, currentTrack?.audio_url, isPlaying]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [radioState?.mode, radioState?.streamUrl, currentTrack?.audio_url, retryCount]);
 
+  // Play/pause handling
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio || !audio.src) return;
+    if (!audio || !audio.src && !hlsRef.current) return;
 
     if (isPlaying) {
-      audio.play().catch(() => {
+      // Resume audio context if suspended (autoplay policy)
+      if (audioCtxRef.current?.state === "suspended") {
+        audioCtxRef.current.resume().catch(() => {});
+      }
+      audio.play().catch((err) => {
+        setStreamError(err.message);
         setIsPlaying(false);
       });
     } else {
       audio.pause();
     }
   }, [isPlaying]);
+
+  // BPM detection (prerecorded only — live streams can't be analysed)
+  useEffect(() => {
+    setBpm(null);
+    if (radioState?.mode !== "prerecorded" || !currentTrack?.audio_url) return;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(currentTrack.audio_url);
+        if (!res.ok) return;
+        const buf = await res.arrayBuffer();
+        const Ctx = window.OfflineAudioContext || (window as any).webkitOfflineAudioContext;
+        const tmpCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const decoded = await tmpCtx.decodeAudioData(buf);
+        const detected = await analyze(decoded);
+        if (!cancelled && detected) setBpm(Math.round(detected));
+        tmpCtx.close();
+      } catch {
+        // CORS / decode failure — silent
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [currentTrack?.audio_url, radioState?.mode]);
 
   return {
     radioState: radioState || RADIO_DEFAULT_STATE,
@@ -195,6 +295,9 @@ export const useRadioPlayer = () => {
     playNext,
     togglePlay,
     audioRef,
+    bpm,
+    streamError,
+    ensureAnalyser,
   };
 };
 
